@@ -111,6 +111,13 @@ class InputData(BaseModel):
         return float(v)
 
 # -----------------------
+# ROOT ENDPOINT
+# -----------------------
+@app.get("/")
+def root():
+    return {"message": "Deep Learning API running"}
+
+# -----------------------
 # AUTH ENDPOINT
 # -----------------------
 @app.post("/token")
