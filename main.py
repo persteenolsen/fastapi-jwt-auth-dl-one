@@ -23,7 +23,22 @@ ALGORITHM = os.getenv("ALGORITHM", "HS256")
 USERNAME = os.getenv("APP_USERNAME", "admin")
 PASSWORD = os.getenv("APP_PASSWORD", "password")
 
-app = FastAPI()
+
+# -----------------------------
+# INIT APP
+# -----------------------------
+# app = FastAPI()
+app = FastAPI(
+    title="FastAPI + JWT + Deep Learning + XOR Neural Network",
+    description="24-04-2026 - FastAPI + JWT + Deep Learning + XOR Neural Network trained by PyTorch and exported to ONNX",
+    version="1.0.0",
+    contact={
+        "name": "Per Olsen",
+        "url": "https://persteenolsen.netlify.app",
+    },
+)
+
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # -----------------------
