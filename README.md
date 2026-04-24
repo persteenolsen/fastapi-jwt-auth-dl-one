@@ -28,6 +28,13 @@ A secure machine learning inference API built with FastAPI, featuring a PyTorch-
 
 ---
 
+## 📈 Notes
+
+- XOR is a toy dataset
+- Focus is ML system design, not real-world prediction accuracy
+
+---
+
 ## 🧠 Machine Learning Model
 
 - Framework: PyTorch  
@@ -144,14 +151,6 @@ Invalid inputs (letters, numbers outside 0/1) are rejected.
 
 ---
 
-
-## 📈 Notes
-
-- XOR is a toy dataset
-- Focus is ML system design, not real-world prediction accuracy
-
----
-
 # 📁 Project Structure
 
 ```
@@ -211,7 +210,7 @@ python-multipart>=0.0.9
 # 🧪 TRAINING PIPELINE
 
 Install training dependencies:
-pip install -r train.txt (included when installing dev.txt like below)
+pip install -r train.txt (or install train.txt automatically by install dev.txt)
 
 Run training:
 python train.py
@@ -224,7 +223,7 @@ model.onnx
 # 🚀 LOCAL DEVELOPMENT
 
 Install dev environment:
-pip install -r requirements/dev.txt
+pip install -r requirements/dev.txt (will install train.txt automatically)
 
 Run FastAPI:
 uvicorn main:app --reload
