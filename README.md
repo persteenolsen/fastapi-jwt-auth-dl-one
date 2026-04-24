@@ -154,6 +154,7 @@ Invalid inputs (letters, numbers outside 0/1) are rejected.
 
 # 📁 Project Structure
 
+```
 project/
 ├── train.py              # Train + export ONNX
 ├── main.py               # FastAPI inference API (Vercel)
@@ -162,6 +163,7 @@ project/
 ├── requirements.txt      # Vercel production dependencies
 ├── model.onnx           # exported model
 └── .env                 # local config (not deployed)
+```
 
 ---
 
