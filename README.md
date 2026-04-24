@@ -1,87 +1,84 @@
-# 🚀 FastAPI ML Inference API (XOR Neural Network)
+# 🚀 FastAPI ML Inference Service with ONNX Runtime and PyTorch-Trained Model
 
 Last updated:
-
 - 24-04-2026
 
-A secure machine learning inference API built with FastAPI, featuring a PyTorch-trained MLP model exported to ONNX, with JWT authentication and strict XOR input validation.
+A production-style machine learning inference API demonstrating model training in PyTorch, export to ONNX, and efficient inference using FastAPI and ONNX Runtime.
+
+---
 
 ## 🚀 What this project demonstrates
 
-- End-to-end ML pipeline
-- Model training → export → inference
-- Secure API with JWT authentication
-- Production-style backend structure
-- Input validation and error handling
+- End-to-end ML workflow (training → export → inference)
+- Model training in PyTorch with deployment in ONNX format
+- Clear separation of training, development, and production environments
+- Secure API design with JWT authentication
+- Lightweight inference using ONNX Runtime
+- Input validation and controlled inference behavior
 
 ---
 
 ## 🚀 Features
 
 - FastAPI REST API
-- PyTorch-trained MLP (XOR problem)
-- ONNX Runtime inference
+- PyTorch-trained neural network (XOR problem)
+- ONNX Runtime inference engine
 - JWT authentication (OAuth2 password flow)
-- Pydantic input validation
-- XOR-only input enforcement (0 or 1)
+- Pydantic request validation
+- Strict XOR input enforcement (0 or 1 only)
 - Custom error handling
 
 ---
 
 ## 📈 Notes
 
-- XOR is a toy dataset
-- Focus is ML system design, not real-world prediction accuracy
+- XOR is a classic toy problem used to demonstrate why neural networks require non-linear layers
+- Focus is system design, not model accuracy
+- Demonstrates full ML pipeline: training → export → deployment
+- Clear separation between training and production inference environments
 
 ---
 
 ## 🧠 Machine Learning Model
 
-- Framework: PyTorch  
+- Framework: PyTorch
 - Architecture:
-  - Input: 2 features  
-  - Hidden layer: 4 neurons (ReLU)  
-  - Output: 1 neuron (Sigmoid)  
-- Task: XOR binary classification  
-- Export: ONNX  
+  - Input layer: 2 features
+  - Hidden layer: 4 neurons (ReLU activation)
+  - Output layer: 1 neuron (Sigmoid activation)
+- Task: XOR binary classification
+- Model export: ONNX format for inference
 
 ---
 
 ## 🔁 System Architecture
 
-Client → JWT Login → Token → Predict Request → ONNX Runtime → Neural Network → Response
+Client → JWT Authentication → Token → Prediction Request → ONNX Runtime → Response
 
 ---
 
 ## 🔐 Authentication
 
-### Step 1: Get token
+### Get token
 
-POST /token
+```bash
+curl -X POST "http://localhost:8000/token" \
+-H "Content-Type: application/x-www-form-urlencoded" \
+-d "username=admin&password=password"
+```
 
-Send form data:
-- username = admin
-- password = password
+### Response
 
-Example request:
-
-curl example:
-    curl -X POST "http://localhost:8000/token" 
-    -H "Content-Type: application/x-www-form-urlencoded" 
-    -d "username=admin&password=password"
-
-Response:
-
+```json id="auth_response"
 {
   "access_token": "your_token_here",
   "token_type": "bearer"
 }
+```
 
----
+### Use token
 
-### Step 2: Use token
-
-Add header:
+Authorization header:
 
 Authorization: Bearer <token>
 
@@ -93,31 +90,29 @@ Authorization: Bearer <token>
 
 POST /predict
 
-Headers:
-Authorization: Bearer <token>
-Content-Type: application/json
-
 Body:
 
+```json id="predict_request"
 {
   "x1": 0,
   "x2": 1
 }
+```
 
 ---
 
 ### Response
 
+```json id="predict_response"
 {
   "user": "admin",
   "prediction": 0.9989
 }
+```
 
 ---
 
 ## ⚠️ Input Rules
-
-Only XOR-valid inputs:
 
 | x1 | x2 | output |
 |----|----|--------|
@@ -126,47 +121,36 @@ Only XOR-valid inputs:
 | 1  | 0  | 1 |
 | 1  | 1  | 0 |
 
-Invalid inputs (letters, numbers outside 0/1) are rejected.
+Only binary inputs (0 or 1) are accepted.
 
 ---
 
-## 🧪 Use Cases
+## 🧪 Tech Stack
 
-- ML API deployment learning project
-- Neural network inference service
-- FastAPI backend practice
-- JWT authentication demo
-- ONNX serving pipeline
-
----
-
-## 🛠 Tech Stack
-
-- FastAPI
-- PyTorch
-- ONNX Runtime
-- NumPy
-- Pydantic
+- FastAPI  
+- PyTorch  
+- ONNX Runtime  
+- NumPy  
+- Pydantic  
 - Python-JOSE (JWT)
 
 ---
 
-# 📁 Project Structure
+## 📁 Project Structure
 
-```
 project/
-├── train.py              # Train + export ONNX
-├── main.py               # FastAPI inference API (Vercel)
-├── requirements/train.txt             # ML training dependencies
-├── requirements/dev.txt               # local dev environment
-├── requirements.txt      # Vercel production dependencies
-├── model.onnx           # exported model
-└── .env                 # local config (not deployed)
-```
+├── train.py              # Train model and export ONNX
+├── main.py               # FastAPI inference service
+├── model.onnx            # Exported model
+├── requirements/
+│   ├── train.txt         # Training dependencies
+│   ├── dev.txt           # Local development dependencies
+├── requirements.txt      # Production (Vercel) dependencies
+└── .env                  # Local configuration (not deployed)
 
 ---
 
-# 🧪 1. TRAINING ENVIRONMENT (train.txt)
+## 🧪 TRAINING ENVIRONMENT (train.txt)
 
 Used ONLY for training the model locally.
 
@@ -176,72 +160,84 @@ numpy>=1.26,<2.0
 
 ---
 
-# 💻 2. LOCAL DEVELOPMENT ENVIRONMENT (dev.txt)
+## 💻 LOCAL DEVELOPMENT ENVIRONMENT (dev.txt)
 
-Used to run FastAPI locally + test full pipeline.
+Used to run FastAPI locally and test full pipeline.
 
 -r train.txt
-
-fastapi>=0.110,<0.116
-uvicorn>=0.29,<0.31
-python-dotenv>=1.0,<2.0
-python-jose[cryptography]>=3.3,<4.0
-onnxruntime>=1.17,<1.20
-
-python-multipart>=0.0.9
-
----
-
-# 🚀 3. VERCEL PRODUCTION ENVIRONMENT (requirements.txt)
-
-Used for deployment (NO PyTorch included).
-
+  
 fastapi>=0.110,<0.116
 uvicorn>=0.29,<0.31
 python-dotenv>=1.0,<2.0
 python-jose[cryptography]>=3.3,<4.0
 onnxruntime>=1.17,<1.20
 numpy>=1.26,<2.0
-
 python-multipart>=0.0.9
 
 ---
 
-# 🧪 TRAINING PIPELINE
+## 🚀 PRODUCTION ENVIRONMENT (requirements.txt)
+
+Used for deployment (no PyTorch included).
+
+fastapi>=0.110,<0.116  
+uvicorn>=0.29,<0.31  
+onnxruntime>=1.17,<1.20  
+numpy>=1.26,<2.0  
+python-dotenv>=1.0,<2.0  
+python-jose[cryptography]>=3.3,<4.0  
+python-multipart>=0.0.9  
+
+---
+
+## 🧪 TRAINING PIPELINE
 
 Install training dependencies:
-pip install -r train.txt (or install train.txt automatically by install dev.txt)
+
+```bash
+pip install -r requirements/train.txt
+```
 
 Run training:
+
+```bash
 python train.py
+```
 
 Output:
 model.onnx
 
 ---
 
-# 🚀 LOCAL DEVELOPMENT
+## 🚀 LOCAL DEVELOPMENT
 
-Install dev environment:
-pip install -r requirements/dev.txt (will install train.txt automatically)
+Install dependencies:
 
-Run FastAPI:
+```bash
+pip install -r requirements/dev.txt
+```
+
+Run API:
+
+```bash
 uvicorn main:app --reload
+```
 
 Swagger UI:
 http://127.0.0.1:8000/docs
 
 ---
 
-# 🚀 DEPLOYMENT (VERCEL)
+## 🚀 DEPLOYMENT (VERCEL)
 
-Vercel uses:
+Production uses:
+
 requirements.txt
 
-No PyTorch required.
+No PyTorch included in deployment.
 
 ---
 
 ## 👨‍💻 Author
 
-Learning project for understanding ML system deployment.
+Learning project for understanding machine learning system deployment and inference architecture.
