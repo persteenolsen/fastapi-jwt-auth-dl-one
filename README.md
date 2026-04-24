@@ -138,6 +138,7 @@ Only binary inputs (0 or 1) are accepted.
 
 ## 📁 Project Structure
 
+```
 project/
 ├── train.py              # Train model and export ONNX
 ├── main.py               # FastAPI inference service
@@ -147,7 +148,7 @@ project/
 │   ├── dev.txt           # Local development dependencies
 ├── requirements.txt      # Production (Vercel) dependencies
 └── .env                  # Local configuration (not deployed)
-
+```
 ---
 
 ## 🧪 TRAINING ENVIRONMENT (train.txt)
