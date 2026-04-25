@@ -44,7 +44,7 @@ A production-style machine learning inference API demonstrating model training i
 - Framework: PyTorch
 - Architecture:
   - Input layer: 2 features
-  - Hidden layer: 4 neurons (ReLU activation)
+  - Hidden layer: 8 neurons (ReLU activation)
   - Output layer: 1 neuron (Sigmoid activation)
 - Task: XOR binary classification
 - Model export: ONNX format for inference

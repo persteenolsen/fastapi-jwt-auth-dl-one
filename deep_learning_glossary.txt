@@ -5,6 +5,7 @@ Deep Learning Glossary (based on your XOR neural network)
 ------------------------------------------------------------
 A tensor is the core data structure in PyTorch.
 Think of it as a generalization of arrays (like NumPy).
+
 - 0D = scalar
 - 1D = vector
 - 2D = matrix (your XOR inputs X are 2D tensors)
@@ -16,11 +17,39 @@ X = torch.tensor([[0,1],[1,0]])
 2. Model (Neural Network)
 ------------------------------------------------------------
 A model is a function that learns to map inputs → outputs.
+
 In your case:
-(0,1) → 1, (1,1) → 0 etc.
+(0,1) → 1, (1,1) → 0, etc.
 
 Your model:
 SimpleNet = input → hidden layer → output layer
+
+------------------------------------------------------------
+2.1 Neuron
+------------------------------------------------------------
+A neuron is the basic computation unit of a neural network.
+
+It:
+1. Receives inputs
+2. Multiplies them by weights
+3. Adds a bias
+4. Applies an activation function
+
+Formula:
+y = activation(x₁w₁ + x₂w₂ + ... + b)
+
+Where:
+- x = inputs
+- w = weights (importance of each input)
+- b = bias (shift value)
+- activation = non-linear function (ReLU, Sigmoid, etc.)
+
+Intuition:
+A neuron is a small decision-maker that learns patterns from data.
+
+In your XOR model:
+- Each neuron learns a small pattern
+- Many neurons together solve complex problems
 
 ------------------------------------------------------------
 3. Linear Layer (nn.Linear)
@@ -40,15 +69,17 @@ Your network uses:
 4. Weights
 ------------------------------------------------------------
 Numbers inside the model that get adjusted during training.
-They determine how "important" each input is.
+
+They determine how important each input is.
 
 Training = learning the best weights.
 
 ------------------------------------------------------------
 5. Bias
 ------------------------------------------------------------
-Extra learned value added to help shift outputs.
-Helps model fit data better.
+An extra learned value added to shift outputs.
+
+Helps the model fit data better.
 
 ------------------------------------------------------------
 6. Activation Function
@@ -69,14 +100,13 @@ ReLU(x) = max(0, x)
 
 Purpose:
 - Removes negative values
-- Helps network learn patterns faster
-- Prevents vanishing gradients (in many cases)
+- Speeds up learning
+- Helps avoid vanishing gradients
 
 ------------------------------------------------------------
 8. Sigmoid
 ------------------------------------------------------------
-Formula:
-maps values → range (0 to 1)
+Maps values into range (0 to 1)
 
 Purpose:
 - Converts output into probability
@@ -104,8 +134,7 @@ BCELoss (Binary Cross Entropy)
 ------------------------------------------------------------
 11. Binary Cross Entropy (BCE)
 ------------------------------------------------------------
-Used when output is:
-- 0 or 1 (binary classification)
+Used for binary classification (0 or 1 outputs).
 
 Compares:
 - predicted probability
@@ -114,10 +143,10 @@ Compares:
 ------------------------------------------------------------
 12. Backpropagation
 ------------------------------------------------------------
-The algorithm that computes how each weight contributed to the error.
+Algorithm that computes how each weight contributed to the error.
 
 It answers:
-"Which weights need to change and by how much?"
+"How should each weight change to reduce error?"
 
 Called in code:
 loss.backward()
@@ -125,11 +154,11 @@ loss.backward()
 ------------------------------------------------------------
 13. Gradient
 ------------------------------------------------------------
-A signal that tells:
-- direction to change weights
-- how strongly each weight affects loss
+A signal that shows:
+- direction to adjust weights
+- strength of the correction
 
-Think of it as a "correction force".
+Think of it as a correction force.
 
 ------------------------------------------------------------
 14. Optimizer
@@ -137,12 +166,12 @@ Think of it as a "correction force".
 Updates weights using gradients.
 
 Your optimizer:
-Adam (adaptive learning rate optimizer)
+Adam
 
 Why Adam:
 - fast
 - stable
-- widely used default choice
+- widely used default optimizer
 
 Step:
 optimizer.step()
@@ -150,13 +179,13 @@ optimizer.step()
 ------------------------------------------------------------
 15. Learning Rate
 ------------------------------------------------------------
-Controls how big each update step is.
+Controls how big each weight update step is.
 
 In your code:
 lr = 0.01
 
-Too high → unstable training
-Too low → slow learning
+- Too high → unstable learning
+- Too low → slow learning
 
 ------------------------------------------------------------
 16. Epoch
@@ -167,16 +196,16 @@ Your code:
 for epoch in range(2000)
 
 Meaning:
-model sees XOR data 2000 times
+The model sees XOR data 2000 times.
 
 ------------------------------------------------------------
 17. Inference
 ------------------------------------------------------------
-Using the trained model to make predictions.
+Using a trained model to make predictions.
 
-No training happens here.
+No learning happens here.
 
-You used:
+Used with:
 torch.no_grad()
 
 ------------------------------------------------------------
@@ -185,14 +214,14 @@ torch.no_grad()
 Disables gradient tracking to:
 - speed up computation
 - reduce memory usage
-- used only for inference
+- improve inference efficiency
 
 ------------------------------------------------------------
 19. Overfitting
 ------------------------------------------------------------
-When a model memorizes training data instead of learning general patterns.
+When a model memorizes training data instead of learning patterns.
 
-XOR is too small to overfit, but real datasets can suffer from this.
+XOR is too small to show serious overfitting, but real datasets can suffer from it.
 
 ------------------------------------------------------------
 20. ONNX
@@ -200,10 +229,10 @@ XOR is too small to overfit, but real datasets can suffer from this.
 Open Neural Network Exchange format.
 
 Purpose:
-- export PyTorch model
-- run it in other systems (C++, Unity, web, etc.)
+- export PyTorch models
+- run models in other systems (C++, Unity, web, etc.)
 
-Your output:
+Output:
 model.onnx
 
 ------------------------------------------------------------
@@ -213,21 +242,23 @@ Forward:
 Input → Prediction
 
 Backward:
-Error → Gradient → Weight updates
+Error → Gradients → Weight updates
 
 Together = learning loop
 
 ------------------------------------------------------------
-22. XOR Problem (Why your model is important)
+22. XOR Problem (Why your model works)
 ------------------------------------------------------------
 XOR is NOT linearly separable.
-That means:
-- no straight line can separate outputs correctly
+
+Meaning:
+- You cannot solve it with a single straight line
 
 Solution:
-- hidden layer + activation functions
+- hidden layer
+- non-linear activation functions
 
-This is why your network works.
+This is why neural networks are needed.
 
 ------------------------------------------------------------
 END OF FILE
