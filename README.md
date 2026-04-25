@@ -1,7 +1,7 @@
 # 🚀 FastAPI ML Inference Service with ONNX Runtime and PyTorch-Trained Model
 
 Last updated:
-- 24-04-2026
+- 25-04-2026
 
 A production-style machine learning inference API demonstrating model training in PyTorch, export to ONNX, and efficient inference using FastAPI and ONNX Runtime.
 

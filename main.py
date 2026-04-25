@@ -30,7 +30,7 @@ PASSWORD = os.getenv("APP_PASSWORD", "password")
 # app = FastAPI()
 app = FastAPI(
     title="FastAPI + JWT + Deep Learning + XOR Neural Network",
-    description="24-04-2026 - FastAPI + JWT + Deep Learning + XOR Neural Network trained by PyTorch and exported to ONNX",
+    description="25-04-2026 - FastAPI + JWT + Deep Learning + XOR Neural Network trained by PyTorch and exported to ONNX",
     version="1.0.0",
     contact={
         "name": "Per Olsen",
