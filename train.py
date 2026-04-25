@@ -5,7 +5,17 @@ import torch.optim as optim
 # -----------------------
 # XOR dataset
 # -----------------------
-# Inputs: all combinations of two binary values
+# This is a classic machine learning problem:
+# The model must learn the XOR (exclusive OR) logic gate.
+#
+# XOR rule:
+# - 0 XOR 0 = 0
+# - 0 XOR 1 = 1
+# - 1 XOR 0 = 1
+# - 1 XOR 1 = 0
+
+# Inputs: all possible combinations of two binary values
+# Each row is one training example with 2 features
 X = torch.tensor([
     [0.0, 0.0],
     [0.0, 1.0],
@@ -13,11 +23,8 @@ X = torch.tensor([
     [1.0, 1.0]
 ], dtype=torch.float32)
 
-# Targets: XOR truth table
-# 0 XOR 0 = 0
-# 0 XOR 1 = 1
-# 1 XOR 0 = 1
-# 1 XOR 1 = 0
+# Targets: expected outputs for XOR
+# Shape is (4, 1) because we have 4 samples and 1 output per sample
 y = torch.tensor([
     [0.0],
     [1.0],
@@ -29,85 +36,157 @@ y = torch.tensor([
 # -----------------------
 # Neural Network
 # -----------------------
-# Define a small feedforward neural network
+# We define a small "feedforward neural network".
+# Feedforward means data moves only in one direction:
+# input → hidden layers → output
+#
+# This network is used because XOR is NOT linearly separable,
+# meaning a single linear layer cannot solve it.
+# We need a hidden layer + non-linearity.
+
 class SimpleNet(nn.Module):
     def __init__(self):
         super().__init__()
 
-        # Sequential = layers applied one after another
+        # nn.Sequential stacks layers in order
+        # Output of one layer becomes input of the next layer
+
         self.net = nn.Sequential(
-            nn.Linear(2, 8),   # Layer 1: 2 inputs → 8 neurons (hidden layer)
-            nn.ReLU(),         # Activation: introduces non-linearity
-            nn.Linear(8, 1),   # Layer 2: 8 → 1 output neuron
-            nn.Sigmoid()       # Squashes output to range [0,1] (probability)
+
+            # -----------------------
+            # First layer (Input → Hidden)
+            # -----------------------
+            # 2 input features (XOR has two inputs: A and B)
+            # 8 neurons = hidden layer size (arbitrary but useful capacity)
+            # Each neuron learns a different feature representation
+            nn.Linear(2, 8),
+
+            # -----------------------
+            # Activation function
+            # -----------------------
+            # ReLU introduces non-linearity:
+            # Without this, the network would behave like a single linear model
+            # ReLU(x) = max(0, x)
+            nn.ReLU(),
+
+            # -----------------------
+            # Output layer (Hidden → Output)
+            # -----------------------
+            # 8 inputs (from hidden layer)
+            # 1 output neuron (final prediction)
+            # This outputs a raw score before activation
+            nn.Linear(8, 1),
+
+            # -----------------------
+            # Sigmoid activation
+            # -----------------------
+            # Converts output into a probability between 0 and 1
+            # Useful for binary classification (0 or 1 decision)
+            nn.Sigmoid()
         )
 
-    # Defines forward pass (how input flows through network)
+    # -----------------------
+    # Forward pass
+    # -----------------------
+    # Defines how input data flows through the network
+    # This function is called automatically when you do model(X)
     def forward(self, x):
         return self.net(x)
 
 
-# Create model instance
+# Create an instance of the neural network
 model = SimpleNet()
+
 
 # -----------------------
 # Training setup
 # -----------------------
-# Adam optimizer updates weights using gradients
+
+# Adam optimizer:
+# - Automatically adapts learning rate per parameter
+# - Efficient and widely used default optimizer
 optimizer = optim.Adam(model.parameters(), lr=0.01)
 
-# Binary Cross Entropy loss (for binary classification)
+# Loss function:
+# Binary Cross Entropy (BCELoss)
+# Measures difference between predicted probability and true label (0 or 1)
 loss_fn = nn.BCELoss()
+
 
 # -----------------------
 # Training loop
 # -----------------------
+# The model sees the same dataset many times (epochs)
+# Each epoch improves weights slightly
+
 for epoch in range(2000):
 
-    # Clear old gradients (PyTorch accumulates gradients by default)
+    # Clear previous gradients
+    # PyTorch accumulates gradients by default, so we reset them each step
     optimizer.zero_grad()
 
-    # Forward pass: compute predictions from inputs
+    # -----------------------
+    # Forward pass
+    # -----------------------
+    # Model makes predictions based on current weights
     pred = model(X)
 
-    # Compute loss: how far predictions are from true values
+    # -----------------------
+    # Loss computation
+    # -----------------------
+    # Compare predictions vs true labels
     loss = loss_fn(pred, y)
 
-    # Backward pass: compute gradients (∂loss/∂weights)
+    # -----------------------
+    # Backpropagation
+    # -----------------------
+    # Computes gradient of loss with respect to all weights
+    # (how each weight contributed to the error)
     loss.backward()
 
-    # Update weights using optimizer
+    # -----------------------
+    # Update weights
+    # -----------------------
+    # Optimizer uses gradients to adjust weights slightly
     optimizer.step()
 
-    # Print progress every 200 epochs (useful for debugging)
+    # Print training progress every 200 epochs
     if epoch % 200 == 0:
         print(f"Epoch {epoch} | Loss: {loss.item():.6f}")
 
 print("\nTraining complete")
 
+
 # -----------------------
 # Verify training worked
 # -----------------------
-# Disable gradient tracking (faster + no memory overhead)
+# torch.no_grad() disables gradient tracking
+# This makes inference faster and reduces memory usage
 with torch.no_grad():
     print("\nModel predictions on XOR:")
-    print(model(X))  # Should be close to [0, 1, 1, 0]
+    print(model(X))  # Expected output: close to [0, 1, 1, 0]
 
 
 # -----------------------
 # Export to ONNX
 # -----------------------
-# Dummy input is required to trace model structure
+# ONNX = Open Neural Network Exchange format
+# Allows model to be used in other frameworks (C++, Unity, etc.)
+
+# Dummy input is required so PyTorch can trace the model structure
 dummy_input = torch.tensor([[0.0, 0.0]], dtype=torch.float32)
 
-# Export trained model to ONNX format (portable to other frameworks)
 torch.onnx.export(
     model,
     dummy_input,
     "model.onnx",
-    input_names=["input"],     # name of input node
-    output_names=["output"],   # name of output node
-    dynamic_axes={             # allows variable batch sizes
+
+    # Naming input/output nodes for clarity in other systems
+    input_names=["input"],
+    output_names=["output"],
+
+    # Allows model to accept different batch sizes at runtime
+    dynamic_axes={
         "input": {0: "batch"},
         "output": {0: "batch"}
     }
