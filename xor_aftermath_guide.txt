@@ -1,0 +1,203 @@
+PyTorch Beginner Mistakes After XOR (Real-World Pitfalls Guide)
+
+------------------------------------------------------------
+1. Forgetting to match output + loss function
+------------------------------------------------------------
+This is the #1 silent failure.
+
+Common wrong combos:
+- Sigmoid + MSELoss (works poorly for classification)
+- No Sigmoid + BCELoss (breaks training)
+- Sigmoid + BCEWithLogitsLoss (double activation bug)
+
+Correct rule:
+- If using Sigmoid → use BCELoss
+- If NOT using Sigmoid → use BCEWithLogitsLoss (preferred)
+
+Better modern practice:
+→ remove Sigmoid and use BCEWithLogitsLoss
+
+------------------------------------------------------------
+2. Using the wrong tensor shapes
+------------------------------------------------------------
+PyTorch is very strict with dimensions.
+
+Common issues:
+- (batch,) instead of (batch, 1)
+- forgetting .unsqueeze(1)
+- mismatched input/output shapes
+
+Example fix:
+y = y.view(-1, 1)
+
+------------------------------------------------------------
+3. Not normalizing input data
+------------------------------------------------------------
+XOR doesn’t need scaling, but real data does.
+
+Bad:
+- raw pixels (0–255)
+- raw prices
+- raw sensor data
+
+Better:
+- scale to 0–1
+- or standardize (mean=0, std=1)
+
+Why it matters:
+→ unscaled data makes training unstable or slow
+
+------------------------------------------------------------
+4. Confusing training vs inference mode
+------------------------------------------------------------
+Common mistake:
+forgetting model.eval()
+
+Difference:
+- model.train() → training behavior (dropout, batchnorm active)
+- model.eval() → stable inference behavior
+
+Even if your model has no dropout yet, this becomes critical later.
+
+------------------------------------------------------------
+5. Forgetting optimizer.zero_grad()
+------------------------------------------------------------
+PyTorch accumulates gradients by default.
+
+Bug:
+- gradients stack every epoch
+- training becomes chaotic
+
+Fix:
+optimizer.zero_grad() every step
+
+------------------------------------------------------------
+6. Learning rate too high or too low
+------------------------------------------------------------
+Symptoms:
+
+Too high:
+- loss explodes
+- predictions become NaN
+
+Too low:
+- training is extremely slow
+- looks “stuck”
+
+Typical safe range:
+- 0.001 to 0.01 (Adam)
+
+------------------------------------------------------------
+7. Thinking loss = accuracy
+------------------------------------------------------------
+Low loss does NOT always mean good model.
+
+You must also check:
+- actual predictions
+- accuracy metric
+
+Example:
+loss = 0.01 might still misclassify samples
+
+------------------------------------------------------------
+8. Not using torch.no_grad() during inference
+------------------------------------------------------------
+Bad:
+- slow inference
+- unnecessary memory usage
+- GPU memory leaks in bigger projects
+
+Correct:
+with torch.no_grad():
+    model(X)
+
+------------------------------------------------------------
+9. Overengineering small problems
+------------------------------------------------------------
+Beginners often:
+- add too many layers
+- increase neurons too much
+
+Problem:
+→ model becomes unstable or unnecessary slow
+
+Rule:
+Start simple → scale only when needed
+
+------------------------------------------------------------
+10. Misunderstanding "learning"
+------------------------------------------------------------
+Common misconception:
+"model learns like a human"
+
+Reality:
+- model adjusts weights using gradients
+- no understanding, only pattern fitting
+
+Important mindset shift:
+→ it is optimization, not reasoning
+
+------------------------------------------------------------
+11. Not shuffling data (big issue in real datasets)
+------------------------------------------------------------
+XOR doesn’t care, but real datasets do.
+
+Without shuffling:
+- model memorizes order
+- poor generalization
+
+Fix:
+use DataLoader with shuffle=True
+
+------------------------------------------------------------
+12. Forgetting batching
+------------------------------------------------------------
+XOR uses full batch (tiny dataset)
+
+Real-world:
+- must use mini-batches
+
+Why:
+- faster training
+- more stable gradients
+- better generalization
+
+------------------------------------------------------------
+13. Ignoring validation split
+------------------------------------------------------------
+Big mistake:
+
+Training only on one dataset split
+
+Correct setup:
+- train set (learn)
+- validation set (tuning)
+- test set (final check)
+
+------------------------------------------------------------
+14. Misreading activation roles
+------------------------------------------------------------
+Common confusion:
+
+ReLU = "learning"
+Sigmoid = "final decision"
+
+Reality:
+- activations just reshape signal
+- learning happens in weights
+
+------------------------------------------------------------
+15. Expecting instant good results on real data
+------------------------------------------------------------
+XOR converges in seconds.
+
+Real datasets:
+- MNIST: minutes
+- image models: hours/days
+
+If loss is slow:
+→ not necessarily broken
+
+------------------------------------------------------------
+END OF GUIDE
+------------------------------------------------------------
