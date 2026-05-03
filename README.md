@@ -51,7 +51,7 @@ A production-style machine learning inference API demonstrating model training i
 
 ---
 
-## 🔧 Model Tuning (NEW)
+## 🔧 Model Tuning
 
 During development, the model was tuned to improve stability and realism of predictions.
 
@@ -64,11 +64,7 @@ Key tuning changes:
 
 Result:
 
-- Smooth, monotonic price curves
-- Stable age depreciation behavior
-- More consistent size scaling
-- Reduced high-range prediction jumps
-- Better generalization without overfitting
+- Smoother and faster model
 ---
 
 ## 🔁 System Architecture
