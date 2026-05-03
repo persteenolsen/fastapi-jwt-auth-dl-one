@@ -51,6 +51,26 @@ A production-style machine learning inference API demonstrating model training i
 
 ---
 
+## 🔧 Model Tuning (NEW)
+
+During development, the model was tuned to improve stability and realism of predictions.
+
+Key tuning changes:
+
+- Added Tanh function instead of ReLu
+- Reduced the hidden layer size (8 → 4 neurons)
+- Kept learning rate (0.01)
+- Kept training epochs (2000)
+
+Result:
+
+- Smooth, monotonic price curves
+- Stable age depreciation behavior
+- More consistent size scaling
+- Reduced high-range prediction jumps
+- Better generalization without overfitting
+---
+
 ## 🔁 System Architecture
 
 Client → JWT Authentication → Token → Prediction Request → ONNX Runtime → Response
