@@ -261,4 +261,74 @@ No PyTorch included in deployment.
 
 ## 👨‍💻 Author
 
-Learning project for understanding machine learning system deployment and inference architecture.
+Learning project for understanding machine learning system deployment and inference architecture
+
+---
+
+## 📈 Model Parameter Adjustments Guide
+
+This guide outlines how common neural network parameters influence the training process and results. It also provides recommendations for adjusting them to optimize model performance.
+
+## 1. Number of Hidden Layers
+- **Increase:** Adds complexity, enabling the model to capture more features. However, it also increases the risk of overfitting. This is suitable for complex datasets.
+- **Decrease:** Results in a simpler model, which may underfit complex tasks but can work well for small or simple datasets.
+
+**Recommendation:**  
+- Start with 1-2 hidden layers.  
+- Use 3-5 layers for more complexity if the dataset requires it.
+
+---
+
+## 2. Number of Neurons (per Layer)
+- **Increase:** More neurons allow the model to learn more complex patterns. However, too many neurons increase the risk of overfitting if the data is limited.
+- **Decrease:** A simpler model with fewer neurons reduces overfitting but may fail to capture complex patterns.
+
+**Recommendation:**  
+- Start with 4-16 neurons per layer.  
+- Increase the number if the model is not capturing enough complexity.
+
+---
+
+## 3. Learning Rate (lr)
+- **Increase:** Speeds up learning but can cause the model to overshoot the optimal weights, potentially leading to poor convergence or instability.
+- **Decrease:** Results in slower, more stable convergence, but may get stuck in local minima or take too long to converge.
+
+**Recommendation:**  
+- Start with a learning rate between `0.001` and `0.01`.  
+- For faster convergence on simpler tasks, try between `0.1` and `0.5`.
+
+---
+
+## 4. Epochs
+- **Increase:** More epochs allow the model to learn longer, but too many can lead to overfitting (where the model memorizes the training data).
+- **Decrease:** Fewer epochs may cause underfitting, where the model hasn't learned enough.
+
+**Recommendation:**  
+- Start with 100-300 epochs.  
+- Monitor for overfitting and stop earlier if needed.
+
+---
+
+## 5. Weight Decay (Regularization)
+- **Increase:** Helps prevent overfitting by penalizing large weights. However, excessive decay can lead to underfitting.
+- **Decrease:** Provides more flexibility but increases the risk of overfitting.
+
+**Recommendation:**  
+- Start with weight decay values between `1e-4` and `1e-5`.  
+- Increase for larger networks or more complex datasets.
+
+---
+
+## Additional Tips:
+- **Hidden Layers and Neurons:** Start with simpler architectures and increase complexity only when necessary. Use cross-validation to test performance.
+- **Learning Rate:** Consider using adaptive optimizers like **Adam** for better learning rate control.
+- **Epochs:** Monitor validation loss and implement early stopping to prevent overfitting, especially with large datasets.
+- **Weight Decay:** Use weight decay to prevent overfitting, but be cautious not to overdo it, as this could lead to underfitting.
+
+---
+
+## Key Takeaways:
+- **Start simple:** Use 1-2 layers and 4-16 neurons.
+- **Adjust learning rate:** Reduce it if the model oscillates or diverges.
+- **Monitor overfitting:** Use early stopping or adjust epochs accordingly.
+- **Regularize with care:** Apply weight decay to prevent overfitting but avoid excessive regularization.
