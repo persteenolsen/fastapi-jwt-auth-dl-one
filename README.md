@@ -1,7 +1,7 @@
 # 🚀 FastAPI ML Inference Service with ONNX Runtime and PyTorch-Trained Model
 
 Last updated:
-- 25-04-2026
+- 03-05-2026
 
 A production-style machine learning inference API demonstrating model training in PyTorch, export to ONNX, and efficient inference using FastAPI and ONNX Runtime.
 
@@ -44,7 +44,7 @@ A production-style machine learning inference API demonstrating model training i
 - Framework: PyTorch
 - Architecture:
   - Input layer: 2 features
-  - Hidden layer: 8 neurons (ReLU activation)
+  - Hidden layer: 4 neurons (Tanh activation)
   - Output layer: 1 neuron (Sigmoid activation)
 - Task: XOR binary classification
 - Model export: ONNX format for inference

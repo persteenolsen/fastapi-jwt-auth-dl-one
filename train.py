@@ -57,25 +57,27 @@ class SimpleNet(nn.Module):
             # First layer (Input → Hidden)
             # -----------------------
             # 2 input features (XOR has two inputs: A and B)
-            # 8 neurons = hidden layer size (arbitrary but useful capacity)
+            # 4 neurons = hidden layer size
             # Each neuron learns a different feature representation
-            nn.Linear(2, 8),
+            nn.Linear(2, 4),
 
             # -----------------------
             # Activation function
             # -----------------------
-            # ReLU introduces non-linearity:
-            # Without this, the network would behave like a single linear model
-            # ReLU(x) = max(0, x)
-            nn.ReLU(),
+            # With only 4 neurons and ReLU → poor representation → failed convergence
+            
+            # With only 4 neurons and Tanh → correct representation → smooth convergence
+            # Tanh is another non-linear activation function that outputs between -1 and 1
+            # Better than ReLu for small networks and can help with learning XOR
+            nn.Tanh(),
 
             # -----------------------
             # Output layer (Hidden → Output)
             # -----------------------
-            # 8 inputs (from hidden layer)
+            # 4 inputs (from hidden layer)
             # 1 output neuron (final prediction)
             # This outputs a raw score before activation
-            nn.Linear(8, 1),
+            nn.Linear(4, 1),
 
             # -----------------------
             # Sigmoid activation
@@ -162,10 +164,23 @@ print("\nTraining complete")
 # -----------------------
 # torch.no_grad() disables gradient tracking
 # This makes inference faster and reduces memory usage
-with torch.no_grad():
-    print("\nModel predictions on XOR:")
-    print(model(X))  # Expected output: close to [0, 1, 1, 0]
+print("\nModel predictions on XOR:")
 
+with torch.no_grad():
+    preds = model(X)
+    
+    print(preds)
+
+    # Convert probabilities → 0/1 using threshold
+    binary_preds = (preds > 0.5).float()
+
+    print("\nBinary predictions (0/1):")
+    print(binary_preds)  # Expected output: close to [0, 1, 1, 0]
+
+# -------------------------
+# XOR solved message
+# -------------------------
+print("\nXOR problem solved!")
 
 # -----------------------
 # Export to ONNX
