@@ -255,12 +255,6 @@ No PyTorch included in deployment.
 
 ---
 
-## 👨‍💻 Author
-
-Learning project for understanding machine learning system deployment and inference architecture
-
----
-
 ## 📈 Model Parameter Adjustments Guide
 
 This guide outlines how common neural network parameters influence the training process and results. It also provides recommendations for adjusting them to optimize model performance.
@@ -328,3 +322,9 @@ This guide outlines how common neural network parameters influence the training 
 - **Adjust learning rate:** Reduce it if the model oscillates or diverges.
 - **Monitor overfitting:** Use early stopping or adjust epochs accordingly.
 - **Regularize with care:** Apply weight decay to prevent overfitting but avoid excessive regularization.
+
+---
+
+## 👨‍💻 Author
+
+Learning project for understanding machine learning system deployment and inference architecture
